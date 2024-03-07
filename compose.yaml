@@ -9,28 +9,21 @@ services:
      - "--providers.docker=true"
      - "--api.dashboard=true"
      - "--api.insecure=true"
-     # - "--providers.docker.exposedbydefault=false"
-     # - "--entrypoints.web.address=:80"
+     - "--providers.docker.exposedbydefault=false"
+     - "--entrypoints.web.address=:80"
    ports:
      - "80:80"  # Expose Traefik on port 80 of the host
      - "443:443"  # Optional for HTTPS (requires additional configuration)
      - "8080:8080" # /dashboard/
    volumes:
      - "/var/run/docker.sock:/var/run/docker.sock:ro"
-       #  - ./traefik.yml:/etc/traefik/traefik.yml  # Optional custom Traefik configuration
 
  # Origin service
  origin33:
    image: harbor.akamai-lab.com/learnakamai/origin33:latest
    scale: 2 # Number of containers
-
    volumes:
      - ./html/learn:/usr/share/nginx/html/learn
-
    labels:
      - "traefik.enable=true"  # Enable Traefik routing for Nginx
      - "traefik.http.routers.origin33.rule=Host(`origin-33.akamai-lab.com`)"
-
-# Define Traefik configuration volume (optional)
-# volumes:
-# traefik-config:  # Empty volume for Traefik configuration persistence
